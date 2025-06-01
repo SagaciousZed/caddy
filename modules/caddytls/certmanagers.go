@@ -48,9 +48,10 @@ func (ts Tailscale) GetCertificate(ctx context.Context, hello *tls.ClientHelloIn
 		return nil, nil // pass-thru: Tailscale can't offer a cert for this name
 	}
 	if err != nil {
-		if c := ts.logger.Check(zapcore.WarnLevel, "could not get status; will try to get certificate anyway"); c != nil {
+		if c := ts.logger.Check(zapcore.WarnLevel, "could not get status; will passthrough"); c != nil {
 			c.Write(zap.Error(err))
 		}
+		return nil, nil
 	}
 	return tscert.GetCertificateWithContext(ctx, hello)
 }
